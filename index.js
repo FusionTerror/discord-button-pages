@@ -38,7 +38,7 @@ module.exports = {
                 msg.edit({ embed: embeds[currentPage], components: [interactivePages] });
                 button.defer(true);
             } else if (button.id == 'back-page') {
-                (currentPage - 1 < 0 ? currentPage = emeds.length -1 : currentPage -= 1);
+                (currentPage - 1 < 0 ? currentPage = embeds.length -1 : currentPage -= 1);
                 msg.edit({ embed: embeds[currentPage], components: [interactivePages] });
                 button.defer(true);
             } else if (button.id == 'cancel-page') {
