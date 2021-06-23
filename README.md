@@ -31,9 +31,9 @@ DiscordButtons(client);
 ```js
 const Discord = require('discord.js'); //Requiring Discord.js module.
 const client = new Discord.Client(); //Creating and assigning the Discord.js Client constructor.
-const discordButtons = require('discord-buttons');
+const DiscordButtons = require('discord-buttons');
 const ButtonPages = require('discord-button-pages');
-discordButtons(client);
+DiscordButtons(client);
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
@@ -54,7 +54,7 @@ client.on('message', msg => {
         .setColor('BLUE');
     
     const embedPages = [embed1, embed2, embed3];
-    ButtonPages.createPages(client, discordButtons, msg, embedPages, 60 * 1000, "red", "👉", "👈", "❌");
+    ButtonPages.createPages(client, msg, embedPages, 60 * 1000, "red", "👉", "👈", "❌");
   }
 });
 ```
