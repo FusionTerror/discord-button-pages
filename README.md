@@ -1,4 +1,4 @@
-# Discord-ClickPages 📖
+# Discord-Button-Pages 📖
 ##### *Interactive Discord embed buttons. Allows for pages to be created with Discord embeds in Discord.js v12!*
 ##### 💖 ~ Support: [Fusion Terror's YouTube](https://www.youtube.com/channel/UCjTvZBc6GFbYkVs9rGWJLbA), [Fusion Terror's Patreon](https://www.patreon.com/fusionterror)
 ##### 🙋‍♂ ~ Help: [Discord Server](https://discord.gg/QJyTkNxVrX)
@@ -6,7 +6,7 @@
 &nbsp;
 ## ✅ ~ Installation
 ```
-npm i discord-clickpages
+npm i discord-button-pages
 ```
 &nbsp;
 ## ⚙️ ~ Setup
@@ -32,7 +32,7 @@ DiscordButtons(client);
 const Discord = require('discord.js'); //Requiring Discord.js module.
 const client = new Discord.Client(); //Creating and assigning the Discord.js Client constructor.
 const DiscordButtons = require('discord-buttons');
-const ClickPages = require('discord-clickpages');
+const ButtonPages = require('discord-button-pages');
 DiscordButtons(client);
 
 client.on('ready', () => {
@@ -54,7 +54,7 @@ client.on('message', msg => {
         .setColor('BLUE');
     
     const embedPages = [embed1, embed2, embed3];
-    ClickPages.createPages(client, msg, embedPages, 60 * 1000, "red", "👉", "👈", "❌");
+    ButtonPages.createPages(client, msg, embedPages, 60 * 1000, "red", "👉", "👈", "❌");
   }
 });
 ```
