@@ -1,31 +1,30 @@
 module.exports = {
-    createPages: async (client, message, embeds, duration, buttonStyle, rightEmoji, leftEmoji, cancelEmoji) => {
+    createPages: async (client, discordButtons, message, embeds, duration, buttonStyle, rightEmoji, leftEmoji, cancelEmoji) => {
         if (!["red", "green", "blurple"].includes(buttonStyle)) throw new TypeError(`Button style provided is not valid.`);
         if (!rightEmoji) throw new TypeError(`An emoji to go to the next page was not provided.`);
         if (!leftEmoji) throw new TypeError(`An emoji to go to the previous page was not provided.`);
         if (!leftEmoji) throw new TypeError(`An emoji to go cancel the embed page was not provided.`);
-        const { MessageButton, MessageActionRow } = require('discord-buttons'); //Requiring MessageButton.
         const buttonStartTime = Date.now(); //Current time of when buttons were made.
         let currentPage = 0;
-        const nextPageButton = new MessageButton()
+        const nextPageButton = new discordButtons.MessageButton()
             .setLabel("")
             .setStyle(buttonStyle)
             .setEmoji(rightEmoji)
             .setID('next-page');
 
-        const backPageButton = new MessageButton()
+        const backPageButton = new discordButtons.MessageButton()
             .setLabel("")
             .setStyle(buttonStyle)
             .setEmoji(leftEmoji)
             .setID('back-page');
 
-        const deletePageButton = new MessageButton()
+        const deletePageButton = new discordButtons.MessageButton()
             .setLabel("")
             .setStyle(buttonStyle)
             .setEmoji(cancelEmoji)
             .setID('cancel-page');
 
-        const interactivePages = new MessageActionRow()
+        const interactivePages = new discordButtons.MessageActionRow()
             .addComponent(backPageButton)
             .addComponent(deletePageButton)
             .addComponent(nextPageButton);

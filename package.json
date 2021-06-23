@@ -1,0 +1,39 @@
+{
+  "name": "discord-button-pages",
+  "version": "1.0.0",
+  "description": "Interactive Discord embed buttons. Allows for pages to be created with Discord embeds in Discord.js v12!",
+  "engines": {
+    "node": ">=7.8.0"
+  },
+  "files": [
+    "index.js",
+    "README.md"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FusionTerror/discord-button-pages.git"
+  },
+  "keywords": [
+    "discord-buttons",
+    "discord.js",
+    "discord-bot",
+    "discordjs",
+    "discordjsbuttons",
+    "discordembedpages",
+    "embeds",
+    "discord.js-embeds"
+  ],
+  "author": "Fusion Terror",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FusionTerror/discord-clickpages/issues"
+  },
+  "homepage": "https://github.com/FusionTerror/discord-clickpages#readme",
+  "dependencies": {
+    "discord-buttons": "^3.2.1"
+  }
+}
