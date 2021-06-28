@@ -28,7 +28,7 @@ module.exports = {
         const interactiveButtons = new MessageActionRow()
             .addComponent(backButton)
             .addComponent(deleteButton)
-            .addComponent(nextButton);
+            .addComponent(fowardButton);
 
         const msg = await message.channel.send({ components: [interactiveButtons], embed: embeds[0] });
         interaction.message = msg;
