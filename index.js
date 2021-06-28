@@ -41,18 +41,18 @@ module.exports = {
         this.interaction.components = interactivePages;
     },
 
-    buttonInteractions: async (button) => {
-        if (this.interaction.interactor !== button.clicker.user || Date.now - this.interaction.buttonStartTime >= this.interaction.duration || button.message.id !== this.interaction.msg.id) return;
+    buttonInteractions: async (button, interaction) => {
+        if (interaction.interactor !== button.clicker.user || Date.now - interaction.buttonStartTime >= interaction.duration || button.message.id !== interaction.msg.id) return;
         if (button.id == 'next-page') {
-            (this.interaction.currentPage + 1 == this.interaction.embeds.length ? this.interaction.currentPage = 0 : this.interaction.currentPage += 1);
-            this.interaction.msg.edit({ embed: this.interaction.embeds[this.interaction.currentPage], components: [this.interaction.components] });
+            (interaction.currentPage + 1 == interaction.embeds.length ? interaction.currentPage = 0 : interaction.currentPage += 1);
+            interaction.msg.edit({ embed: interaction.embeds[interaction.currentPage], components: [interaction.components] });
             button.defer(true);
         } else if (button.id == 'back-page') {
-            (this.interaction.currentPage - 1 < 0 ? this.interaction.currentPage = this.interaction.embeds.length - 1 : this.interaction.currentPage -= 1);
-            this.interaction.msg.edit({ embed: this.interaction.embeds[this.interaction.currentPage], components: [this.interaction.components] });
+            (interaction.currentPage - 1 < 0 ? interaction.currentPage = interaction.embeds.length - 1 : interaction.currentPage -= 1);
+            interaction.msg.edit({ embed: this.interaction.embeds[this.interaction.currentPage], components: [interaction.components] });
             button.defer(true);
         } else if (button.id == 'cancel-page') {
-            await this.interaction.msg.delete()
+            await interaction.msg.delete()
                 .catch(err => console.error(err));
         }
     }

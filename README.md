@@ -40,7 +40,7 @@ client.on('ready', () => {
 });
 
 client.on('clickButton', (button) => {
-  ButtonPages.buttonInteractions(button);
+  ButtonPages.buttonInteractions(button, ButtonPages.interaction);
 });
 
 client.on('message', msg => {
