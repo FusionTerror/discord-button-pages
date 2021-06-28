@@ -1,4 +1,5 @@
 const { MessageActionRow, MessageButton } = require('discord-buttons');
+const wait = require('util').promisify(setTimeout);
 
 module.exports = {
     createPages: async (interaction, message, embeds, duration, buttonStyle, rightEmoji, leftEmoji, cancelEmoji) => {
@@ -50,8 +51,11 @@ module.exports = {
             (interaction.currentPage - 1 < 0 ? interaction.currentPage = interaction.embeds.length - 1 : interaction.currentPage -= 1);
             interaction.message.edit({ embed: interaction.embeds[interaction.currentPage], components: [interaction.components] });
             button.defer(true);
-        } else if (button.id == 'cancel-page') {
-            interaction.message.edit(`:white_check_mark: Interaction finished`);
+        } else if (button.id == 'delete-page') {
+            interaction.message.edit(`:white_check_mark: Interaction ended.`);
+            wait(5000).then(async () => {
+                await interaction.message.delete();
+            });
         }
     }
 };
