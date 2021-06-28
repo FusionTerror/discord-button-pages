@@ -48,7 +48,7 @@ module.exports = {
             button.defer(true);
         } else if (button.id == 'back-page') {
             (interaction.currentPage - 1 < 0 ? interaction.currentPage = interaction.embeds.length - 1 : interaction.currentPage -= 1);
-            interaction.message.edit({ embed: this.interaction.embeds[this.interaction.currentPage], components: [interaction.components] });
+            interaction.message.edit({ embed: interaction.embeds[interaction.currentPage], components: [interaction.components] });
             button.defer(true);
         } else if (button.id == 'cancel-page') {
             await interaction.message.delete()
