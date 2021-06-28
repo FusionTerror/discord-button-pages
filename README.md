@@ -39,6 +39,10 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
+client.on('clickButton', (button) => {
+  ButtonPages.buttonInteractions(button);
+});
+
 client.on('message', msg => {
   if (msg.content === '!test') {
     const embed1 = new Discord.MessageEmbed()
@@ -54,7 +58,7 @@ client.on('message', msg => {
         .setColor('BLUE');
     
     const embedPages = [embed1, embed2, embed3];
-    ButtonPages.createPages(client, msg, embedPages, 60 * 1000, "red", "👉", "👈", "❌");
+    ButtonPages.createPages(msg, embedPages, 60 * 1000, "red", "👉", "👈", "❌");
   }
 });
 ```
