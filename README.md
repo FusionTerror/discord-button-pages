@@ -31,8 +31,9 @@ DiscordButtons(client);
 ```js
 const Discord = require('discord.js'); //Requiring Discord.js module.
 const client = new Discord.Client(); //Creating and assigning the Discord.js Client constructor.
-const DiscordButtons = require('discord-buttons');
-const ButtonPages = require('discord-button-pages');
+client.interaction = {}; //Creating interaction object
+const DiscordButtons = require('discord-buttons'); //Requiring Discord-BUttons module.
+const ButtonPages = require('discord-button-pages'); //Requiring Discord-Button-Pages module.
 DiscordButtons(client);
 
 client.on('ready', () => {
@@ -40,7 +41,7 @@ client.on('ready', () => {
 });
 
 client.on('clickButton', (button) => {
-  ButtonPages.buttonInteractions(button, ButtonPages.interaction);
+  ButtonPages.buttonInteractions(button, client.interaction);
 });
 
 client.on('message', msg => {
@@ -58,7 +59,7 @@ client.on('message', msg => {
         .setColor('BLUE');
     
     const embedPages = [embed1, embed2, embed3];
-    ButtonPages.createPages(msg, embedPages, 60 * 1000, "red", "👉", "👈", "❌");
+    ButtonPages.createPages(client.interaction, msg, embedPages, 60 * 1000, "red", "👉", "👈", "❌");
   }
 });
 ```

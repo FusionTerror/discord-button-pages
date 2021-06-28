@@ -1,44 +1,43 @@
+const { MessageActionRow, MessageButton } = require('discord-buttons');
+
 module.exports = {
-    interaction: Object,
-    createPages: async (message, embeds, duration, buttonStyle, rightEmoji, leftEmoji, cancelEmoji) => {
-        console.log(buttonStyle);
-        if (!["red", "green", "blurple"].includes(buttonStyle)) throw new TypeError(`Button style provided is not valid.`);
+    createPages: async (interaction, message, embeds, duration, buttonStyle, rightEmoji, leftEmoji, cancelEmoji) => {
+        if (!['red', 'green', 'blurple'].includes(buttonStyle)) throw new TypeError(`Button style provided is not valid. Valid options: red, green, blurple`);
         if (!rightEmoji) throw new TypeError(`An emoji to go to the next page was not provided.`);
         if (!leftEmoji) throw new TypeError(`An emoji to go to the previous page was not provided.`);
         if (!leftEmoji) throw new TypeError(`An emoji to go cancel the embed page was not provided.`);
-        const { MessageButton, MessageActionRow } = require('discord-buttons');
-        const nextPageButton = new MessageButton()
+
+        const fowardButton = new MessageButton()
             .setLabel("")
             .setStyle(buttonStyle)
             .setEmoji(rightEmoji)
             .setID('next-page');
 
-        const backPageButton = new MessageButton()
+        const backButton = new MessageButton()
             .setLabel("")
             .setStyle(buttonStyle)
             .setEmoji(leftEmoji)
             .setID('back-page');
 
-        const deletePageButton = new MessageButton()
+        const deleteButton = new MessageButton()
             .setLabel("")
             .setStyle(buttonStyle)
             .setEmoji(cancelEmoji)
-            .setID('cancel-page');
+            .setID('delete-page');
 
-        const interactivePages = new MessageActionRow()
-            .addComponent(backPageButton)
-            .addComponent(deletePageButton)
-            .addComponent(nextPageButton);
+        const interactiveButtons = new MessageActionRow()
+            .addComponent(backButton)
+            .addComponent(deleteButton)
+            .addComponent(nextButton);
 
-        const msg = await message.channel.send({ components: [interactivePages], embed: embeds[0] });
-
-        this.interaction.msg = msg;
-        this.interaction.embeds = embeds;
-        this.interaction.currentPage = 0;
-        this.interaction.duration = duration;
-        this.interaction.interactor = message.author;
-        this.interaction.buttonStartTime = Date.now();
-        this.interaction.components = interactivePages;
+        const msg = await message.channel.send({ components: [interactiveButtons], embed: embeds[0] });
+        interaction.message = msg;
+        interaction.embeds = embeds;
+        interaction.currentPage = 0;
+        interaction.duration = duration;
+        interaction.interactor = message.author;
+        interaction.buttonStartTime = Date.now();
+        interaction.components = interactiveButtons;
     },
 
     buttonInteractions: async (button, interaction) => {
