@@ -1,59 +1,145 @@
-module.exports = {
-    interaction: Object,
-    createPages: async (message, embeds, duration, buttonStyle, rightEmoji, leftEmoji, cancelEmoji) => {
-        console.log(buttonStyle);
-        if (!["red", "green", "blurple"].includes(buttonStyle)) throw new TypeError(`Button style provided is not valid.`);
-        if (!rightEmoji) throw new TypeError(`An emoji to go to the next page was not provided.`);
-        if (!leftEmoji) throw new TypeError(`An emoji to go to the previous page was not provided.`);
-        if (!leftEmoji) throw new TypeError(`An emoji to go cancel the embed page was not provided.`);
-        const { MessageButton, MessageActionRow } = require('discord-buttons');
-        const nextPageButton = new MessageButton()
-            .setLabel("")
-            .setStyle(buttonStyle)
-            .setEmoji(rightEmoji)
-            .setID('next-page');
+module.exports = async (msg, pages, emojiList = ['⬅️', '⏹️', '➡️'], timeout = 120000) => {
+    const {
+        MessageButton,
+        MessageActionRow
+    } = require('discord-buttons');
 
-        const backPageButton = new MessageButton()
-            .setLabel("")
-            .setStyle(buttonStyle)
-            .setEmoji(leftEmoji)
-            .setID('back-page');
+    if (!msg) throw new TypeError('Msg argument is not supplied')
+    if (!pages) throw new TypeError('Pages argument is not supplied')
 
-        const deletePageButton = new MessageButton()
-            .setLabel("")
-            .setStyle(buttonStyle)
-            .setEmoji(cancelEmoji)
-            .setID('cancel-page');
+    let currentPage = 0;
 
-        const interactivePages = new MessageActionRow()
-            .addComponent(backPageButton)
-            .addComponent(deletePageButton)
-            .addComponent(nextPageButton);
+    const next = new MessageButton()
+        .setLabel("")
+        .setStyle('blurple')
+        .setEmoji(emojiList[2])
+        .setID('next')
 
-        const msg = await message.channel.send({ components: [interactivePages], embed: embeds[0] });
+    const back = new MessageButton()
+        .setLabel("")
+        .setStyle('blurple')
+        .setEmoji(emojiList[0])
+        .setID('back')
 
-        this.interaction.msg = msg;
-        this.interaction.embeds = embeds;
-        this.interaction.currentPage = 0;
-        this.interaction.duration = duration;
-        this.interaction.interactor = message.author;
-        this.interaction.buttonStartTime = Date.now();
-        this.interaction.components = interactivePages;
-    },
+    const del = new MessageButton()
+        .setLabel("")
+        .setStyle('red')
+        .setEmoji(emojiList[1])
+        .setID('del')
 
-    buttonInteractions: async (button) => {
-        if (this.interaction.interactor !== button.clicker.user || Date.now - this.interaction.buttonStartTime >= this.interaction.duration || button.message.id !== this.interaction.msg.id) return;
-        if (button.id == 'next-page') {
-            (this.interaction.currentPage + 1 == this.interaction.embeds.length ? this.interaction.currentPage = 0 : this.interaction.currentPage += 1);
-            this.interaction.msg.edit({ embed: this.interaction.embeds[this.interaction.currentPage], components: [this.interaction.components] });
-            button.defer(true);
-        } else if (button.id == 'back-page') {
-            (this.interaction.currentPage - 1 < 0 ? this.interaction.currentPage = this.interaction.embeds.length - 1 : this.interaction.currentPage -= 1);
-            this.interaction.msg.edit({ embed: this.interaction.embeds[this.interaction.currentPage], components: [this.interaction.components] });
-            button.defer(true);
-        } else if (button.id == 'cancel-page') {
-            await this.interaction.msg.delete()
-                .catch(err => console.error(err));
+    const interactive = new MessageActionRow()
+        .addComponent(back)
+        .addComponent(del)
+        .addComponent(next)
+
+    const e = await msg.channel.send({
+        component: interactive,
+        embed: pages[0].setFooter(`Page ${currentPage + 1} / ${pages.length} • Pagination Expires In 120 Seconds`, msg.author.displayAvatarURL({
+            dynamic: true
+        }))
+    })
+
+    const filter = (button) => button.clicker.user.id === msg.author.id
+    const collector = e.createButtonCollector(filter, {
+        time: timeout
+    })
+
+    collector.on('collect', async (btn) => {
+        switch (btn.id) {
+            case 'back':
+                currentPage = currentPage > 0 ? --currentPage : pages.length - 1;
+
+                e.edit({
+                    embed: pages[currentPage].setFooter(`Page ${currentPage + 1} / ${pages.length} • Pagination Expires In 120 Seconds`, msg.author.displayAvatarURL({
+                        dynamic: true
+                    })),
+                    component: interactive
+                })
+
+                btn.defer(true)
+                break;
+            case 'del':
+                const next1 = new MessageButton()
+                    .setLabel("")
+                    .setStyle('blurple')
+                    .setEmoji(emojiList[2])
+                    .setID('next')
+                    .setDisabled()
+
+                const back1 = new MessageButton()
+                    .setLabel("")
+                    .setStyle('blurple')
+                    .setEmoji(emojiList[0])
+                    .setID('back')
+                    .setDisabled()
+
+                const del1 = new MessageButton()
+                    .setLabel("")
+                    .setStyle('red')
+                    .setEmoji(emojiList[1])
+                    .setID('del')
+                    .setDisabled()
+
+                const interactive1 = new MessageActionRow()
+                    .addComponent(back1)
+                    .addComponent(del1)
+                    .addComponent(next1)
+
+                e.edit({
+                    embed: pages[currentPage].setFooter(`Page ${currentPage + 1} / ${pages.length} • Pagination Expired`, msg.author.displayAvatarURL({
+                        dynamic: true
+                    })),
+                    component: interactive1
+                })
+
+                btn.defer(true)
+                break;
+            case 'next':
+                currentPage = currentPage + 1 < pages.length ? ++currentPage : 0;
+
+                e.edit({
+                    embed: pages[currentPage].setFooter(`Page ${currentPage + 1} / ${pages.length} • Pagination Expires In 120 Seconds`, msg.author.displayAvatarURL({
+                        dynamic: true
+                    })),
+                    component: interactive
+                })
+                btn.defer(true)
+                break;
         }
-    }
-};
+    })
+
+    collector.on('end', (collected) => {
+        const next2 = new MessageButton()
+            .setLabel("")
+            .setStyle('blurple')
+            .setEmoji(emojiList[2])
+            .setID('next')
+            .setDisabled()
+
+        const back2 = new MessageButton()
+            .setLabel("")
+            .setStyle('blurple')
+            .setEmoji(emojiList[0])
+            .setID('back')
+            .setDisabled()
+
+        const del2 = new MessageButton()
+            .setLabel("")
+            .setStyle('red')
+            .setEmoji(emojiList[1])
+            .setID('del')
+            .setDisabled()
+
+        const interactive1 = new MessageActionRow()
+            .addComponent(back2)
+            .addComponent(del2)
+            .addComponent(next2)
+
+        e.edit({
+            embed: pages[currentPage].setFooter(`Page ${currentPage + 1} / ${pages.length} • Pagination Expired`, msg.author.displayAvatarURL({
+                dynamic: true
+            })),
+            component: interactive1
+        })
+    })
+}
