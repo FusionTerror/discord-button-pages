@@ -46,11 +46,11 @@ module.exports = {
         if (button.id == 'next-page') {
             (interaction.currentPage + 1 == interaction.embeds.length ? interaction.currentPage = 0 : interaction.currentPage += 1);
             interaction.message.edit({ embed: interaction.embeds[interaction.currentPage], components: [interaction.components] });
-            button.defer(true);
+            button.reply.defer(true);
         } else if (button.id == 'back-page') {
             (interaction.currentPage - 1 < 0 ? interaction.currentPage = interaction.embeds.length - 1 : interaction.currentPage -= 1);
             interaction.message.edit({ embed: interaction.embeds[interaction.currentPage], components: [interaction.components] });
-            button.defer(true);
+            button.reply.defer(true);
         } else if (button.id == 'delete-page') {
             interaction.message.edit(`:white_check_mark: Interaction ended.`);
             wait(5000).then(async () => {
