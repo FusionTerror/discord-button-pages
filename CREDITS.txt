@@ -1,0 +1,5 @@
+Main developer:
+FusionTerror
+
+Contributors:
+Laqco (fixed false implementation of discord-buttons)
