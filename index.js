@@ -6,7 +6,7 @@ module.exports = {
         if (!['red', 'green', 'blurple'].includes(buttonStyle)) throw new TypeError(`Button style provided is not valid. Valid options: red, green, blurple`);
         if (!rightEmoji) throw new TypeError(`An emoji to go to the next page was not provided.`);
         if (!leftEmoji) throw new TypeError(`An emoji to go to the previous page was not provided.`);
-        if (!leftEmoji) throw new TypeError(`An emoji to go cancel the embed page was not provided.`);
+        if (!cancelEmoji) throw new TypeError(`An emoji to go cancel the embed page was not provided.`);
 
         const fowardButton = new MessageButton()
             .setLabel("")
